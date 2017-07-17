@@ -1,0 +1,7 @@
+[
+  {
+    "name": "AE2",
+    "file": "appliedenergistics2-rv4-alpha-11.jar",
+    "mixin": "mixins/mixin-ae2.json"
+  }
+]
