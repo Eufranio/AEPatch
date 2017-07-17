@@ -1,0 +1,126 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sponge"
+            url = "https://repo.spongepowered.org/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'idea'
+
+version = "1.0-SNAPSHOT"
+group= "com.magitechserver" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "AEPatch"
+
+ext {
+    mixinSrg = new File(project.buildDir, 'tmp/mixins/mixin.aepatch.srg')
+    mixinRefMap = new File(project.buildDir, "tmp/mixins/mixin.aepatch.refmap.json")
+}
+
+reobfJar.addSecondarySrgFile project.mixinSrg
+
+minecraft {
+    version = "1.10.2-12.18.3.2316"
+    mappings = "snapshot_20161117"
+    runDir = "run"
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Xlint:-processing',
+            "-AoutSrgFile=${project.mixinSrg.canonicalPath}",
+            "-AoutRefMapFile=${project.mixinRefMap.canonicalPath}",
+            "-AreobfSrgFile=${project.file('build/srgs/mcp-srg.srg').canonicalPath}"
+    ]
+}
+
+afterEvaluate {
+    tasks.compileJava.options.compilerArgs += "-AreobfSrgFile=${tasks.reobfJar.primarySrg}"
+}
+
+task copySrgs(type: Copy, dependsOn: 'genSrgs') {
+    from plugins.getPlugin("net.minecraftforge.gradle.forge").delayedFile('net.minecraftforge.gradle.GradleStart.srgDir')
+
+    include '**/*.srg'
+    into 'build/srgs'
+}
+
+
+setupDecompWorkspace.dependsOn copySrgs
+setupDevWorkspace.dependsOn copySrgs
+compileJava.dependsOn copySrgs
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+repositories {
+    maven {
+        name = "SpongePowered"
+        url = "https://repo.spongepowered.org/maven"
+    }
+}
+
+dependencies {
+    shade("org.spongepowered:mixin:0.6.14-SNAPSHOT"){
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+    }
+}
+
+
+jar {
+    from project.mixinRefMap
+
+    manifest {
+        attributes 'FMLCorePlugin': 'com.magitechserver.aepatch.AEPatchCore',
+                'FMLCorePluginContainsFMLMod': 'true',
+                'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                'TweakOrder': '0',
+                'MixinConfigs': 'mixins-examples.json'
+    }
+
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            include 'org/spongepowered', 'org/spongepowered/**'
+        }
+    }
+}
+
+processResources
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
+
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+
+                // replace version and mcversion
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
+

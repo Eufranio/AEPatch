@@ -1,0 +1,20 @@
+[
+  {
+    "modid": "AEPatch",
+    "name": "AEPatch",
+    "description": "A simple Mixin mod that adds a break event in the AE2 mod",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Eufranio"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": [
+      ""
+    ]
+  }
+]
