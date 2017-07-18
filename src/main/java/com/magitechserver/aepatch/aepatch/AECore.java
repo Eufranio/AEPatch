@@ -9,8 +9,6 @@ import java.util.Map;
 /**
  * Created by Frani on 17/07/2017.
  */
-@IFMLLoadingPlugin.Name("AEPatcher")
-@IFMLLoadingPlugin.MCVersion("1.10.2")
 public class AECore implements IFMLLoadingPlugin {
 
     public static PatchLoader loader = new PatchLoader();
@@ -31,7 +29,7 @@ public class AECore implements IFMLLoadingPlugin {
 
     @Override
     public String getModContainerClass() {
-        return AEPatch.class.getName();
+        return null;
     }
 
     @Override

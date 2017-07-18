@@ -1,7 +1,7 @@
 [
   {
-    "modid": "AEPatch",
-    "name": "AEPatch",
+    "modid": "AECore",
+    "name": "AECore",
     "description": "A simple Mixin mod that adds a break event in the AE2 mod",
     "version": "${version}",
     "mcversion": "${mcversion}",

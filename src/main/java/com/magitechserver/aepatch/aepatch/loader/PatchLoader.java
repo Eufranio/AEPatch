@@ -53,8 +53,8 @@ public class PatchLoader {
     }
 
     private void loadModJar(File jar) throws Exception{
-        ((LaunchClassLoader) this.getClass().getClassLoader()).addURL(jar.toURI().toURL());
-        CoreModManager.getReparseableCoremods().add(jar.getName());
+        // ((LaunchClassLoader) this.getClass().getClassLoader()).addURL(jar.toURI().toURL());
+        // CoreModManager.getReparseableCoremods().add(jar.getName());
     }
 
     public List<String> getLoadedPatches() {

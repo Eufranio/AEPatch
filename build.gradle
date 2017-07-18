@@ -26,7 +26,7 @@ apply plugin: 'idea'
 
 version = "1.0-SNAPSHOT"
 group= "com.magitechserver" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AEPatch"
+archivesBaseName = "AECore"
 
 ext {
     mixinSrg = new File(project.buildDir, 'tmp/mixins/mixin.aepatch.srg')
@@ -36,6 +36,7 @@ ext {
 reobfJar.addSecondarySrgFile project.mixinSrg
 
 minecraft {
+    coreMod = 'com.magitechserver.aepatch.aepatch.AECore'
     version = "12.18.3.2316"
     mappings = "snapshot_20161117"
     runDir = "run"
@@ -79,7 +80,7 @@ repositories {
 }
 
 dependencies {
-    shade("org.spongepowered:mixin:0.6.15-SNAPSHOT"){
+    shade("org.spongepowered:mixin:0.6.13-SNAPSHOT"){
         exclude module: 'launchwrapper'
         exclude module: 'guava'
     }
@@ -91,7 +92,7 @@ jar {
 
     manifest {
         attributes 'FMLCorePlugin': 'com.magitechserver.aepatch.aepatch.AECore',
-                'FMLCorePluginContainsFMLMod': 'true',
+                'FMLCorePluginContainsFMLMod': 'false',
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
                 'TweakOrder': '0'
     }
