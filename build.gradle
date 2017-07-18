@@ -26,7 +26,7 @@ apply plugin: 'idea'
 
 version = "1.0-SNAPSHOT"
 group= "com.magitechserver" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AECore"
+archivesBaseName = "AEPatch"
 
 ext {
     mixinSrg = new File(project.buildDir, 'tmp/mixins/mixin.aepatch.srg')

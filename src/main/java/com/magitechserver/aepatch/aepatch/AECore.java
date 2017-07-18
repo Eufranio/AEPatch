@@ -29,7 +29,7 @@ public class AECore implements IFMLLoadingPlugin {
 
     @Override
     public String getModContainerClass() {
-        return null;
+        return "com.magitechserver.aepatch.aepatch.AEPatch";
     }
 
     @Override
